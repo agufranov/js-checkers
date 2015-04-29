@@ -3,6 +3,8 @@ html
     head
         script(type='text/javascript' src='lib/jquery/dist/jquery.min.js')
         script(type='text/javascript' src='lib/bootstrap/dist/js/bootstrap.min.js')
+        script(type='text/javascript' src='lib/vue/dist/vue.js')
+        script(type='text/javascript' src='vue.js')
         link(rel='stylesheet' href='lib/bootstrap/dist/css/bootstrap.min.css')
         link(rel='stylesheet' href='style.css')
     body
@@ -14,11 +16,12 @@ html
                             .score
                                 span Текущий счет
                                 span.float-right 3:3
-                            .player
-                                h3 Игрок 1
+                            .player.player1#v
+                                h3 {{name}}
+                                input(v-model='name')
                                 h4 00:00
                                 div 5
-                            .player
+                            .player.player2
                                 h3 Игрок 2
                                 h4 00:00
                                 div 5
