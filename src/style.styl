@@ -1,0 +1,40 @@
+.float-right {
+    float: right;
+}
+
+.score {
+    border: 1px solid gray;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.player {
+    border: 1px solid gray;
+    margin-bottom: 10px;
+    padding: 10px;
+
+    * {
+        text-align: center;
+    }
+}
+
+.board {
+    width: 800px;
+    height: 800px;
+    padding: 0;
+    background-color: burlywood;
+    
+    .board-row {
+        .board-cell {
+            width: 100px;
+            height: 100px;
+            float: left;
+            border: 1px solid;
+
+        }
+
+        &:nth-child(even) .board-cell:nth-child(odd), &:nth-child(odd) .board-cell:nth-child(even) {
+            background: black;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+doctype html
+html
+    head
+        script(type='text/javascript' src='lib/jquery/dist/jquery.min.js')
+        script(type='text/javascript' src='lib/bootstrap/dist/js/bootstrap.min.js')
+        link(rel='stylesheet' href='lib/bootstrap/dist/css/bootstrap.min.css')
+        link(rel='stylesheet' href='style.css')
+    body
+        .container
+            .panel.panel-default
+                .panel-body
+                    .row
+                        .col-md-3
+                            .score
+                                span Текущий счет
+                                span.float-right 3:3
+                            .player
+                                h3 Игрок 1
+                                h4 00:00
+                                div 5
+                            .player
+                                h3 Игрок 2
+                                h4 00:00
+                                div 5
+                            button.btn.btn-default.btn-block.btn-lg Начать заново
+                        .col-md-9
+                            .panel.panel-default
+                                .panel-body.board
+                                    - for (var i = 0; i < 8; i++) {
+                                    .board-row
+                                        - for (var j = 0; j < 8; j++) {
+                                            .board-cell
+                                        - }
+                                    - }
