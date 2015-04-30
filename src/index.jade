@@ -11,27 +11,25 @@ html
         link(rel='stylesheet' href='style.css')
     body
         .container
-            .panel.panel-default
-                .panel-body
-                    .row
-                        .col-md-3
-                            .score
-                                span Текущий счет
-                                span.float-right 3:3
-                            .player(v-class='active: active' v-repeat='players')
-                                h3(v-if='stateNotNew') {{name}}
-                                input.form-control(v-model='name' v-if='stateNew')
-                                h4 {{timer}}
-                                div 5
-                            button.btn.btn-default.btn-block.btn-lg(v-on='click: new_click') Начать заново
-                            button.btn.btn-default.btn-block.btn-lg(v-on='click: play1_click') Играть 1
-                            button.btn.btn-default.btn-block.btn-lg(v-on='click: play2_click') Играть 2
-                        .col-md-9.board-col
-                            .board
-                                .board-cell(class='{{color}}' style='top:{{x | position}}; left:{{y | position}};' v-repeat='board.fields')
-                                .figure(class='{{type}}' style='top:{{field.x | position}}; left:{{field.y | position}}; background: {{player.color}}' v-repeat='board.figures')
-                                .board-overlay(v-if='stateNew')
-                                    .text(v-on='click: play1_click')
-                                        h3 Добро пожаловать!
-                                        br
-                                        span Кликните для начала игры
+            .row
+                .col-md-3
+                    .score
+                        span Текущий счет
+                        span.float-right 3:3
+                    .player(v-class='active: active' v-repeat='players')
+                        h3(v-if='stateNotNew' style='color: {{color}}') {{name}}
+                        input.form-control(v-model='name' v-if='stateNew')
+                        h4 {{timer}}
+                        div Взял: {{board.figures | killed}}
+                    button.btn.btn-default.btn-block.btn-lg(v-on='click: new_click') Начать заново
+                    button.btn.btn-default.btn-block.btn-lg(v-on='click: play1_click') Играть 1
+                    button.btn.btn-default.btn-block.btn-lg(v-on='click: play2_click') Играть 2
+                .col-md-9.board-col
+                    .board
+                        .board-cell(class='{{color}}' style='top:{{row | position}}; left:{{col | position}};' v-repeat='board.fields' v-on='click: cell_click')
+                        .figure(class='{{type}}' v-class='selected: selected, killed: isKilled, attacked: isAttacked' style='top:{{field.row | position}}; left:{{field.col | position}}; background: {{player.color}}' v-repeat='board.figures' v-on='click: select_figure')
+                        .board-overlay(v-if='stateNew')
+                            .text(v-on='click: play1_click')
+                                h3 Добро пожаловать!
+                                br
+                                span Кликните для начала игры
