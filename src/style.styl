@@ -17,6 +17,10 @@
     > * {
         text-align: center;
     }
+
+    &.active {
+        background: #0F0;
+    }
 }
 
 .board-col {
@@ -48,23 +52,12 @@
             }
         }
 
-        // &:nth-child(even) .board-cell:nth-child(odd), &:nth-child(odd) .board-cell:nth-child(even) {
-        // }
-
         .figure.checker {
             width: 80px;
             height: 80px;
             margin: 10px;
             border-radius: 50%;
             position: absolute;
-
-            &.white {
-                background: white;
-            }
-
-            &.black {
-                background: black;
-            }
         }
 
         .board-overlay {
