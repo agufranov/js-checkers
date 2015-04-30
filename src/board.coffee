@@ -1,5 +1,5 @@
 # Создаем клетки в доске
-Board =
+@Board =
     # fieldsArray: []
     fields: _.flatten [1..8].map (i) ->
         [1..8].map (j) ->
@@ -21,6 +21,6 @@ Board =
         @figures = _(@fields)
             .filter (f) -> f.color is 'black' and (f.x <= 3 or f.x >= 6)
             # .forEach (f) -> f.color = 'test'
-            .map (f) -> { x: f.x, y: f.y, type: 'checker', color: if f.x <= 3 then 'white' else 'black' }
+            .map (f) -> { field: f, type: 'checker', color: if f.x >= 6 then 'white' else 'black' }
 
 Board.fillWithCheckers()

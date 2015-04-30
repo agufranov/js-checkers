@@ -26,9 +26,11 @@ html
                             button.btn.btn-default.btn-block.btn-lg(v-on='click: new_click') Начать заново
                             button.btn.btn-default.btn-block.btn-lg(v-on='click: play_click') Играть
                         .col-md-9.board-col
-                            .panel.panel-default
-                                .panel-body.board
-                                    .board-cell(class='{{color}}' style='top:{{x | position}}; left:{{y | position}};' v-repeat='board.fields')
-                                    .figure(class='{{type}} {{color}}' style='top:{{x | position}}; left:{{y | position}};' v-repeat='board.figures')
-                                    .board-overlay(v-if='stateNew')
-                                        .text Welcome
+                            .board
+                                .board-cell(class='{{color}}' style='top:{{x | position}}; left:{{y | position}};' v-repeat='board.fields')
+                                .figure(class='{{type}} {{color}}' style='top:{{field.x | position}}; left:{{field.y | position}};' v-repeat='board.figures')
+                                .board-overlay(v-if='stateNew')
+                                    .text(v-on='click: play_click')
+                                        h3 Добро пожаловать!
+                                        br
+                                        span Кликните для начала игры
