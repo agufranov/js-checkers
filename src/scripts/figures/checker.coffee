@@ -1,22 +1,3 @@
-class @Board
-    constructor: ({ @cols, @rows }) ->
-        @fields = _.flatten [1..@rows].map (i) =>
-            [1..@cols].map (j) =>
-                row: i, col: j, color: if (i + j) % 2 is 0 then 'white' else 'black'
-        @figures = []
-
-
-    getFigureAt: (col, row) ->
-        @figures.filter( (f) -> f.field.col is col and f.field.row is row and not f.isKilled)[0]
-        
-
-class @Figure
-    constructor: ({ @field, @type, @player, @data }) ->
-        @isKilled = false
-        @canMove = (field) -> throw new Error 'Not implemented'
-        @move = (to) -> throw new Error 'Not implemented'
-
-
 class @Checker extends Figure
     constructor: ({ @field, @player, @data }) ->
         super field: @field, type: 'checker', player: @player, data: @data
@@ -72,7 +53,3 @@ class @Checker extends Figure
                 # @board.figures.$remove @$index
 
             # if @data.direction is 'up' and @field.row is 1 or @data.direction is 'down' and @field.row is @board.rows
-
-class @King extends Figure
-    constructor: ({ @field, @player, @data }) ->
-        super field: @field, type: 'king', player: @player, data: @data
