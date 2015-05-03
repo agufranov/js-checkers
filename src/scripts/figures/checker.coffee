@@ -48,8 +48,4 @@ class @Checker extends Figure
                 @isAttacked = false
                 @end_move()
 
-                console.log 'index:', @$index
                 @board.figures.$set(@$index, new King field: @field, player: @player, data: @data)
-                # @board.figures.$remove @$index
-
-            # if @data.direction is 'up' and @field.row is 1 or @data.direction is 'down' and @field.row is @board.rows
