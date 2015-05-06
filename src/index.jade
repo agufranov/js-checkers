@@ -15,20 +15,25 @@ html
                     .score
                         span Текущий счет
                         span.float-right 3:3
-                    .player(v-class='active: active' v-repeat='players')
-                        h3(v-if='stateNotNew' style='color: {{color}}') {{name}}
-                        input.form-control(v-model='name' v-if='stateNew')
+                    .player(v-class='active: active' v-repeat='game.players')
+                        h3(v-if='game.state.name != "new"' style='color: {{color}}') {{name}}
+                        input.form-control(v-model='name' v-if='game.state.name == "new"')
                         h4 {{timer}}
-                        div Взял: {{board.figures | killed}}
+                        div Побед: {{wins}}
+                        div
+                            |Взял:
+                            span(v-if='game.board') {{game.board.figures | killed}}
                     button.btn.btn-default.btn-block.btn-lg(v-on='click: new_click') Начать заново
-                    button.btn.btn-default.btn-block.btn-lg(v-on='click: play1_click') Играть 1
-                    button.btn.btn-default.btn-block.btn-lg(v-on='click: play2_click') Играть 2
                 .col-md-9.board-col
                     .board
-                        .board-cell(class='{{color}}' style='top:{{row | position}}; left:{{col | position}};' v-repeat='board.fields' v-on='click: cell_click')
-                        .figure(class='{{type}}' v-class='selected: selected, killed: isKilled, attacked: isAttacked' style='top:{{field.row | position}}; left:{{field.col | position}}; background: {{player.color}}' v-repeat='board.figures' v-on='click: select_figure')
-                        .board-overlay(v-if='stateNew')
-                            .text(v-on='click: play1_click')
-                                h3 Добро пожаловать!
+                        .board-cell(class='{{color}}' style='top:{{row | position}}; left:{{col | position}};' v-repeat='game.board.fields' v-on='click: cell_click')
+                        .figure(class='{{type}}' v-class='selected: selected, killed: isKilled, attacked: isAttacked' style='top:{{field.row | position}}; left:{{field.col | position}}; background: {{player.color}}' v-repeat='game.board.figures' v-on='click: select_figure')
+                        .board-overlay(v-if='game.state.name == "new" || game.state.name == "gameover"')
+                            .text(v-if='game.state.name == "new"' v-on='click: play1_click')
+                                h3 Новая игра
                                 br
                                 span Кликните для начала игры
+                            .text(v-show='gameover' v-on='click: new_click')
+                                h3 Игра закончена
+                                br
+                                span Победил {{winner}}

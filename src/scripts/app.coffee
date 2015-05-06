@@ -1,71 +1,57 @@
 $ ->
-    require ['board', 'figures/figure', 'figures/checker', 'figures/king'], ->
+    require ['util', 'board', 'game', 'figures/figure', 'figures/checkers/checker', 'figures/checkers/checker-pawn', 'figures/checkers/checker-king'], ->
         Vue.filter 'position', (value) ->
             "#{(parseInt(value) - 1) * 100}px"
 
         Vue.filter 'killed', (figures) ->
             figures
-                .filter (f) => f.player.number isnt @$data.number and f.isKilled
+                .filter (f) => f.player?.number isnt @$data.number and f.isKilled
                 .length
 
-        window.v = new Vue
+        gameVM = new Vue
             el: '.container'
             data:
-                state:
-                    name: 'new'
-                players: _.object [{ number: 1, color: 'beige' }, { number: 2, color: 'black' }].map (p) ->
-                    [
-                        p.number,
-                        _(p).extend
-                            name: localStorage["player_#{p.number}"] or "Игрок #{p.number}"
-                            timer: 0
-                            interval: null
-                            active: false
-                    ]
-                board: new Board cols: 8, rows: 5
+                game: new Game
+                    boardData: { cols: 8, rows: 8 }
+                    playersData: [{ number: 1, color: 'beige' }, { number: 2, color: 'black' }]
                 selected_figure: null
             computed:
-                stateNew: -> @state.name is 'new'
-                stateNotNew: -> @state.name isnt 'new'
+                winner: ->
+                    @game.players[@game.state.winner].name
+                gameover: ->
+                    @game.state.name is 'gameover'
             methods:
+                new_click: ->
+                    @game.new()
+
+                select_figure: (e) ->
+                    figureVM = e.targetVM
+                    return unless @game.state.name is 'play' and @game.state.playerNum is figureVM.player.number
+                    @$set 'selected_figure', figureVM
+
                 end_move: ->
                     @$set 'selected_figure', null
-                    playerNum = @state.playerNum + 1
-                    playerNum = 1 unless @players[playerNum]
-                    @$set 'state', name: 'play', playerNum: playerNum
-                new_click: ->
-                    @state = name: 'new'
                 play1_click: ->
-                    @state = name: 'play', playerNum: 1
-                play2_click: ->
-                    @state = name: 'play', playerNum: 2
-                select_figure: (e) ->
-                    figure = e.targetVM
-                    return unless @state.name is 'play' and @state.playerNum is figure.player.number
-                    v.$set 'selected_figure', figure
+                    @game.play()
                 cell_click: (e) ->
-                    console.log [e.targetVM.col, e.targetVM.row]
-                    @selected_figure?.move e.targetVM
+                    @selected_figure?.$data.move e.targetVM
 
-        for n of v.players
-            v.$watch "players[#{n}]", (newVal, oldVal) ->
-                localStorage["player_#{newVal.number}"] = newVal.name
-            , true
+        window.vm = gameVM # debug
 
-        v.$watch 'selected_figure', (newVal, oldVal) ->
-            if newVal and newVal.$data
-                newVal.$set 'selected', true
+        gameVM.$watch 'selected_figure', (newVal, oldVal) ->
             if oldVal and oldVal.$data
                 oldVal.$set 'selected', false
+            if newVal and newVal.$data
+                newVal.$set 'selected', true
 
-        v.$watch 'state', (newState, oldState) ->
-            console.log "#{oldState.name} (#{oldState.playerNum}) -> #{newState.name} (#{newState.playerNum})"
+        gameVM.$watch 'game.state', (newState, oldState) ->
+            @$set 'selected_figure', null
             if oldState.name is 'play'
-                player = @players[oldState.playerNum]
+                player = @game.players[oldState.playerNum]
                 player.active = false
                 clearInterval player.interval
             if newState.name is 'play'
-                player = @players[newState.playerNum]
+                player = @game.players[newState.playerNum]
                 player.active = true
                 do (player) =>
                     player.interval = setInterval ->
@@ -73,12 +59,7 @@ $ ->
                     , 100
         , true
 
-        fillWithCheckers = ->
-            checkerRows = 2
-            v.board.figures = _(v.board.fields)
-                .filter (f) -> f.color is 'black' and (f.row <= checkerRows or f.row >= v.board.rows - checkerRows + 1)
-                .map (f) ->
-                    firstPlayer = f.row <= checkerRows
-                    new Checker { field: f, player: v.players[if firstPlayer then 1 else 2], data: { direction: if firstPlayer then 'down' else 'up' } }
-
-        fillWithCheckers()
+        for n of gameVM.game.players
+            gameVM.$watch "game.players[#{n}]", (newVal, oldVal) ->
+                localStorage["player_#{newVal.number}"] = newVal.name
+            , true
